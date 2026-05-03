@@ -1,0 +1,14 @@
+body{
+  background-color: #F9FAFB;
+  font-family: Sans-Serif;
+}
+.hed{
+  font-weight: 700 bold;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+.hed2{
+ font-weight: 400; 
+ font-size: 16px;
+ letter-spacing: normal;
+}
