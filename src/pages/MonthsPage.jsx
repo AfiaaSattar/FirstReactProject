@@ -1,7 +1,14 @@
 
-
+import { Calendar } from 'lucide-react';
 import {Link} from 'react-router-dom'
 import styled from 'styled-components';
+
+//activ month and day
+const now = new Date();
+const currentMonthIndex = now.getMonth();
+const currentDay = now.getDate();
+const currentYear = now.getFullYear();
+
 
 export default function MonthsPage(){
   const months = [
@@ -13,6 +20,18 @@ export default function MonthsPage(){
   const DateCell = styled.div`
   color: ${props => props.isEmpty ? 'transparent' : '#444'};
   `
+  const IconContainer = styled.div`
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    padding: 15px;
+  `
+  const MonthContainer = styled.div`
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    padding: 15px;
+    `
 
   const getMonthData = (monthIndex) => {
     const year = 2026;
@@ -33,7 +52,8 @@ export default function MonthsPage(){
         display: 'grid', 
         gridTemplateColumns: 'repeat(4, 1fr)', 
         gap: '20px', 
-        marginTop: '20px' 
+        marginTop: '20px',
+        backgroundColor: 'white',
       }}>
         {months.map((month, index) => (
           <Link 
@@ -44,7 +64,7 @@ export default function MonthsPage(){
               textAlign: 'center', 
               textDecoration: 'none',
               color: 'black',
-              borderRadius: '8px'
+              borderRadius: '8px',
             }}
           >
             <div>
@@ -53,8 +73,13 @@ export default function MonthsPage(){
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)'
               }}>
-                <p> {month} </p>
-                <p> Icone </p>
+                <MonthContainer>
+                  {month}
+                </MonthContainer>
+
+                <IconContainer>
+                   <Calendar />
+                </IconContainer>
               </div>
 
 
@@ -65,6 +90,7 @@ export default function MonthsPage(){
                 display: 'grid',
                 gridTemplateColumns: 'repeat(7, 1fr)',
                 backgroundColor: 'white',
+                padding: '20px'
               }}>
                 {dayLabels.map((day,i) => (
                   <p key={i}>{day}</p>
@@ -76,7 +102,7 @@ export default function MonthsPage(){
                 display: 'grid',
                 gridTemplateColumns: 'repeat(7, 1fr)',
                 backgroundColor: 'white',
-                gap: '7px'
+                gap: '7px',
               }}>
 
                 {getMonthData(index).map((day,i) => (
