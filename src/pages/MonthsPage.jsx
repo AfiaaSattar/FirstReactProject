@@ -9,16 +9,17 @@ const currentMonthIndex = now.getMonth();
 const currentDay = now.getDate();
 const currentYear = now.getFullYear();
 
-
 export default function MonthsPage(){
   const months = [
     "January", "February", "March", "April", "May", "June", 
     "July", "August", "September", "October", "November", "December"
   ];
+
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
   const DateCell = styled.div`
-  color: ${props => props.isEmpty ? 'transparent' : '#444'};
+  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? 'white' : '#444'};
+  background-color: ${props => props.isToday ? '#03a9f4' : 'transparent'}
   `
   const IconContainer = styled.div`
     display: flex;
@@ -69,7 +70,7 @@ export default function MonthsPage(){
           >
             <div>
               <div style={{
-                backgroundColor: '#ccc',
+               backgroundColor: index === currentMonthIndex && currentYear === 2026 ? '#e1f5fe' : '#f0f0f0',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)'
               }}>
@@ -104,12 +105,16 @@ export default function MonthsPage(){
                 backgroundColor: 'white',
                 gap: '7px',
               }}>
+              {getMonthData(index).map((day, i) => {
+                    // This logic checks if the cell is TODAY
+                    const isToday = index === currentMonthIndex && day === currentDay && currentYear === 2026;
 
-                {getMonthData(index).map((day,i) => (
-                  <DateCell key={i} isEmpty={!day}>
-                    {day}
-                  </DateCell>
-                ))}
+                    return (
+                      <DateCell key={i} isEmpty={!day} isToday={isToday}>
+                        {day}
+                      </DateCell>
+                    );
+                  })}
               </div>
             </div>
            
