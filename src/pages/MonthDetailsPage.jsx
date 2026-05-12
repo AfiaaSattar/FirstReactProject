@@ -1,4 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+
+ const dayLabels = [
+  "Sunday", 
+  "Monday", 
+  "Tuesday", 
+  "Wednesday", 
+  "Thursday", 
+  "Friday", 
+  "Saturday"
+];
 
 export default function MonthDetailsPage() {
   const { monthId } = useParams(); // Gets the ID from the URL (e.g., '4')
@@ -13,8 +25,26 @@ export default function MonthDetailsPage() {
 
   return (
     <div style={{ padding: '40px' }}>
-      <h1>Month {monthId}</h1>
-      <Link to="/">Back to Dashboard</Link>
+     <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 2fr)',
+     }}> 
+      <Link to="/"> <ArrowLeft /> Back to Dashboard</Link>
+        <ArrowLeft /> Month {monthId} <ArrowRight />
+</div>
+   <div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(7, 1fr)',
+        gap: '10px',
+        padding: '20px',
+        textAlign: 'center'
+      }}>
+        {dayLabels.map((day,i) => (
+          <p key={i}>{day}</p>
+        ))}
+      </div>
+
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(7, 1fr)', 
@@ -36,7 +66,8 @@ export default function MonthDetailsPage() {
             {day}
           </Link>
         ))}
+        </div>
+       </div>
       </div>
-    </div>
   );
 }

@@ -19,7 +19,12 @@ export default function MonthsPage(){
 
   const DateCell = styled.div`
   color: ${props => props.isEmpty ? 'transparent' : props.isToday ? 'white' : '#444'};
-  background-color: ${props => props.isToday ? '#03a9f4' : 'transparent'}
+  background-color: ${props => props.isToday ? '#03a9f4' : 'transparent'};
+  border-radius: ${props => props.isToday ? '20%' : '0'};
+  &:hover{
+  background-color: ${props => props.isEmpty ? 'transparent' : '#ccc'};
+  border-radius: 8px;
+  }
   `
   const IconContainer = styled.div`
     display: flex;
@@ -33,7 +38,20 @@ export default function MonthsPage(){
     justify-content: left;
     padding: 15px;
     `
-
+const StyledLink = styled(Link)`
+  border: 1px solid #ccc;     /* Standard CSS: No quotes, use semicolon */
+  text-align: center;         /* Use kebab-case (text-align) not camelCase */
+  text-decoration: none;
+  color: black;
+  border-radius: 8px;
+  display: block;             /* Crucial for the border to show correctly */
+  transition: border-color 0.2s ease;
+  
+  &:hover {
+    border-color: #03a9f4;   
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+`;
   const getMonthData = (monthIndex) => {
     const year = 2026;
     const FirstDay = new Date(year, monthIndex, 1).getDay();
@@ -44,11 +62,12 @@ export default function MonthsPage(){
 
     return [...blanks, ...days];
   }
+  
    return (
     <div style={{ padding: '40px' }}>
       <h1 className='hed'>2026 Overview</h1>
       <p className='hed2'>Select a month to view details</p>
-      
+
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(4, 1fr)', 
@@ -57,16 +76,9 @@ export default function MonthsPage(){
         backgroundColor: 'white',
       }}>
         {months.map((month, index) => (
-          <Link 
+          <StyledLink
             key={month} 
             to={`/month/${index + 1}`} 
-            style={{  
-              border: '1px solid #ccc', 
-              textAlign: 'center', 
-              textDecoration: 'none',
-              color: 'black',
-              borderRadius: '8px',
-            }}
           >
             <div>
               <div style={{
@@ -118,7 +130,7 @@ export default function MonthsPage(){
               </div>
             </div>
            
-          </Link>
+          </StyledLink>
         ))}
       </div>
     </div>
