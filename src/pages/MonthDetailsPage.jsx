@@ -13,19 +13,20 @@ const dayLabels = [
   "Friday",
   "Saturday"
 ];
+
 const ViewDay = styled.div`
  text-align: left;
  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? 'black' : '#444'};
  `
 const StyledGridLink = styled(Link)`
-  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? 'white' : '#444'};
-  background-color: ${props => props.isToday ? '#03a9f4' : 'transparent'};
+  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? '#03a9f4' : '#444'};
+  background-color: ${props => props.isEmpty ? 'transparent' : 'white'};
   border-radius: ${props => props.isToday ? '20%' : '0'};
+  border: 2px solid ${props => props.isEmpty ? 'transparent' : '#ccc'};
+  border-color: ${props => props.isToday ? '#03a9f4' : 'transparent'};
   &:hover{
-  background-color: ${props => props.isEmpty ? 'transparent' : '#ccc'};
-  border-radius: 8px;
+  border-color: ${props => props.isEmpty ? 'transparent' : '#03a9f4'};   border-radius: 8px;
   color: ${props => props.isEmpty ? 'transparent' : '#03a9f4'};
-  border-color: ${props => props.isEmpty ? 'transparent' : '#03a9f4'}
 }
 `
 const DateCell = styled.div`
@@ -68,7 +69,6 @@ export default function MonthDetailsPage() {
   const monthIdx = parseInt(monthId) - 1;
   const calendarDays = getMonthData(monthIdx);
   const currentMonthName = months[monthIdx];
-
 
   return (
     <div style={{ padding: '40px' }}>
@@ -113,14 +113,13 @@ export default function MonthDetailsPage() {
                 style={{
                   padding: '20px',
                   textAlign: 'center',
-                  border: `1px solid ${!day ? 'transparent' : '#ccc'}`,
                   borderRadius: '8px',
                   textDecoration: 'none',
-                  color: 'black',
+                 
                   pointerEvents: day ? 'auto' : 'none'
                 }}
               >
-                <DateCell>
+                <DateCell isEmpty={!day} isToday={isToday}>
                   {day}
                 </DateCell>
                 <ViewDay isEmpty={!day} > View day <ArrowRight /> </ViewDay>
