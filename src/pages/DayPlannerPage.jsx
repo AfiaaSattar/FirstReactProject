@@ -45,15 +45,15 @@ const DailyHeader = styled.div`
   border-bottom: 1px solid #e2e8f0; 
 `
 const DailyInfo = styled.textarea`
-margin: 24px;
-padding: 16px;
-height: 150px;
-border: 1px solid #e2e8f0;
-border-radius: 12px;
-outline: none;
+  margin: 24px;
+  padding: 16px;
+  height: 150px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
 
-&:focus{
-border: 2px solid #5587c6;
+  &:focus{
+  border: 2px solid #5587c6;
 }
 `;
 
@@ -101,10 +101,41 @@ const AddTasks = styled.div`
   }
 `
 
-const TasksList = styled.div`
-
+const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+  width: 18px;
+  height: 18px;
+  accent-color: #059669;
+  cursor: pointer;
 `
+
+const TasksList = styled.div`
+  display: flex;
+  justify-content: space-between; /* Left items left, right badge right */
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0; /* Crisp line between list items */
+`
+const StatusBadge = styled.div`
+display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: ${props => props.$isOverdue ? '#fef2f2' : '#f1f5f9'};
+  color: ${props => props.$isOverdue ? '#dc2626' : '#64748b'};`
 export default function DayPlannerPage() {
+  const [tasks, setTasks] = useState([
+  { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true },
+  { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false },
+  { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true }
+]);
+const toggleComplete = (id) => {
+  setTasks(tasks.map(task =>
+    task.id === id ? { ...task, completed: !task.completed } : task
+  ));
+};
   return (
     <div style={{ padding: '40px', margin: '0 100px 0 200px' }}>
       {/* Header Nav */}
@@ -140,15 +171,31 @@ export default function DayPlannerPage() {
         </TasksHead>
 
         <AddTasks>
-          <input placeholder='Add a new task...'/>
+          <input placeholder='Add a new task...' />
           <button>The time</button>
           <button> Add </button>
         </AddTasks>
-        <TasksList>
 
-        </TasksList>
+
+
+        {/* Pinned to Left */}
+        {tasks.map(task => (
+          <TasksList key={task.id}>
+            <leftItems>
+              <Checkbox
+                checked={task.completed}
+                onChange={() => toggleComplete(task.id)}
+              />
+            </leftItems>
+
+            {/* Pinned to Right */}
+            <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
+            </StatusBadge>
+          </TasksList>
+        ))}
 
       </Tasks>
+
     </div>
   );
 }
