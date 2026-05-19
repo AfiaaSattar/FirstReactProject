@@ -186,10 +186,12 @@ const toggleComplete = (id) => {
                 checked={task.completed}
                 onChange={() => toggleComplete(task.id)}
               />
+              {task.text}
             </leftItems>
 
             {/* Pinned to Right */}
             <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
+              {task.completed ? "10:00" : task.time}
             </StatusBadge>
           </TasksList>
         ))}
