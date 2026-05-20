@@ -176,8 +176,6 @@ const toggleComplete = (id) => {
           <button> Add </button>
         </AddTasks>
 
-
-
         {/* Pinned to Left */}
         {tasks.map(task => (
           <TasksList key={task.id}>
