@@ -124,7 +124,9 @@ display: flex;
   padding: 6px 12px;
   border-radius: 20px;
   background-color: ${props => props.$isOverdue ? '#fef2f2' : '#f1f5f9'};
-  color: ${props => props.$isOverdue ? '#dc2626' : '#64748b'};`
+  color: ${props => props.$isOverdue ? '#dc2626' : '#64748b'};
+  `
+
 export default function DayPlannerPage() {
   const [tasks, setTasks] = useState([
   { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true },
