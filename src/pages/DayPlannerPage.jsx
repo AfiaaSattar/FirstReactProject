@@ -79,13 +79,14 @@ const TasksHead = styled.div`
 `
 const AddTasks = styled.div`
   display: grid;
-  grid-template-columns: 2fr auto auto;
+  grid-template-columns: 2fr auto;
   background-color: #fbfbfb;
   padding: 16px 24px;
   font-weight: 600;
   color: #1e293b;
   border-bottom: 1px solid #e2e8f0; 
   gap:20px;
+  align-items: center;
 
   input{
     margin: 5px;
@@ -98,6 +99,15 @@ const AddTasks = styled.div`
     &:focus{
     border: 2px solid #5587c6;
 }
+  }
+
+  button{
+    display: inline-block;
+    padding: 21px 30px;
+    border: 2px solid #5587c6;
+    background-color: #5587c6;
+    color: white;
+    border-radius: 12px;
   }
 `
 
@@ -129,15 +139,16 @@ display: flex;
 
 export default function DayPlannerPage() {
   const [tasks, setTasks] = useState([
-  { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true },
-  { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false },
-  { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true }
-]);
-const toggleComplete = (id) => {
-  setTasks(tasks.map(task =>
-    task.id === id ? { ...task, completed: !task.completed } : task
-  ));
-};
+    { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true },
+    { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false },
+    { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true }
+  ]);
+  const toggleComplete = (id) => {
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
   return (
     <div style={{ padding: '40px', margin: '0 100px 0 200px' }}>
       {/* Header Nav */}
@@ -173,9 +184,8 @@ const toggleComplete = (id) => {
         </TasksHead>
 
         <AddTasks>
-          <input placeholder='Add a new task...' />
-          <button>The time</button>
-          <button> Add </button>
+          <input value='' placeholder='Add a new task...' />
+          <button> + Add </button>
         </AddTasks>
 
         {/* Pinned to Left */}
@@ -189,9 +199,13 @@ const toggleComplete = (id) => {
               {task.text}
             </leftItems>
 
-            {/* Pinned to Right */}
+            {/* Pinned to Right
             <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
               {task.completed ? "10:00" : task.time}
+            </StatusBadge>  */}
+
+            <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
+
             </StatusBadge>
           </TasksList>
         ))}
