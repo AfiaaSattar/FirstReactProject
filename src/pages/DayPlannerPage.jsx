@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { Play } from 'lucide-react';
+import { ArrowLeft, BubblesIcon } from 'lucide-react';
+import { Play, Pause} from 'lucide-react';
 import { Square } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import styled from 'styled-components';
@@ -130,7 +130,7 @@ const TasksList = styled.div`
 `
 const StatusBadge = styled.div`
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
   gap: 6px;
   font-size: 13px;
@@ -167,26 +167,49 @@ font-size: 14px;
 font-weight: 600;
 color: ${props => props.$isActive ? '#5587c6' : '#64748b'};
 `
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  color: #64748b;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+`
 export default function DayPlannerPage() {
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true, timeSpent: 0},
+    { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true, timeSpent: 0 },
     { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false, timeSpent: 340 },
     { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true, timeSpent: 0 }
   ]);
 
-const [taskInput, setTaskInput] = useState('');
+  const formatTime = (totalSeconds) => {
+    const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const secs = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
 
-const [activeTaskId, setActiveTaskId] = useState(null);
+  const [taskInput, setTaskInput] = useState('');
 
-useEffect(() => {
+  const [activeTaskId, setActiveTaskId] = useState(null);
+
+  useEffect(() => {
     let interval = null;
 
     if (activeTaskId !== null) {
       interval = setInterval(() => {
         setTasks(prevTasks =>
           prevTasks.map(task =>
-            task.id === activeTaskId 
-              ? { ...task, timeSpent: task.timeSpent + 1 } 
+            task.id === activeTaskId
+              ? { ...task, timeSpent: task.timeSpent + 1 }
               : task
           )
         );
@@ -201,6 +224,13 @@ useEffect(() => {
   const toggleComplete = (id) => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const resetTimer = (id) => {
+    if (activeTaskId === id ) setActiveTaskId(null);
+    setTasks(tasks.map(task => 
+      task.id === id ? {...task, timeSpent: 0} :task
     ));
   };
 
@@ -254,24 +284,27 @@ useEffect(() => {
               {task.text}
             </leftItems>
 
-            {/* Pinned to Right
-            <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
-              {task.completed ? "10:00" : task.time}
-            </StatusBadge>  */}
-
             <LeftSide>
               {/* 6. Render the interactive stopwatch panel on the right side */}
               <TimerControls>
                 <TimeDisplay $isActive={activeTaskId === task.id}>
-
+                  {formatTime(task.timeSpent)}
                 </TimeDisplay>
+                {!task.completed && (
+                  <>
+                    <IconButton onClick={() => toggleTimer(task.id)}>
+                      {activeTaskId === task.id ? <Pause size={16} /> : <Play size={16} />}
+                    </IconButton>
+
+                    {task.timeSpent > 0 && (
+                      <BubblesIcon onClick={() => resetTimer(task.id)}>
+                       <RotateCcw size={14} />
+                      </BubblesIcon>
+                    )}
+
+                  </>
+                )}
               </TimerControls>
-              <Play onClick={incTimer()}/>
-              <Square />
-              <div> 10:00 </div>
-              <Play />
-              <Square />
-              <Trash2 />
             </LeftSide>
           </TasksList>
         ))}
