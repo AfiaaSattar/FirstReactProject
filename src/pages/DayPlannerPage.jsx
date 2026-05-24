@@ -1,6 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { Play } from 'lucide-react';
+import { Square } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import styled from 'styled-components';
 const NavBut = styled(Link)`
 text-decoration: none;
@@ -126,7 +129,8 @@ const TasksList = styled.div`
   border-top: 1px solid #e2e8f0; /* Crisp line between list items */
 `
 const StatusBadge = styled.div`
-display: flex;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   align-items: center;
   gap: 6px;
   font-size: 13px;
@@ -136,13 +140,64 @@ display: flex;
   background-color: ${props => props.$isOverdue ? '#fef2f2' : '#f1f5f9'};
   color: ${props => props.$isOverdue ? '#dc2626' : '#64748b'};
   `
+const LeftSide = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+    div{
+      align-items: center;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      background-color: ${props => props.$isOverdue ? '#fef2f2' : '#f1f5f9'};
+      color: ${props => props.$isOverdue ? '#dc2626' : '#64748b'};
 
+    }
+  `
+const TimerControls = styled.div`
+display:  flex;
+align-items: center;
+gap: 12px;
+`
+const TimeDisplay = styled.time`
+font-family: monospace;
+font-variant-numeric: tabular-num;
+font-size: 14px;
+font-weight: 600;
+color: ${props => props.$isActive ? '#5587c6' : '#64748b'};
+`
 export default function DayPlannerPage() {
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true },
-    { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false },
-    { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true }
+    { id: 1, text: "Review quarterly reports", time: "Overdue", completed: false, isOverdue: true, timeSpent: 0},
+    { id: 2, text: "Team standup meeting", time: "10:00", completed: true, isOverdue: false, timeSpent: 340 },
+    { id: 3, text: "Update project documentation", time: "Overdue", completed: false, isOverdue: true, timeSpent: 0 }
   ]);
+
+const [taskInput, setTaskInput] = useState('');
+
+const [activeTaskId, setActiveTaskId] = useState(null);
+
+useEffect(() => {
+    let interval = null;
+
+    if (activeTaskId !== null) {
+      interval = setInterval(() => {
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.id === activeTaskId 
+              ? { ...task, timeSpent: task.timeSpent + 1 } 
+              : task
+          )
+        );
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [activeTaskId]);
+
   const toggleComplete = (id) => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
@@ -184,7 +239,7 @@ export default function DayPlannerPage() {
         </TasksHead>
 
         <AddTasks>
-          <input value='' placeholder='Add a new task...' />
+          <input placeholder='Add a new task...' />
           <button> + Add </button>
         </AddTasks>
 
@@ -204,9 +259,20 @@ export default function DayPlannerPage() {
               {task.completed ? "10:00" : task.time}
             </StatusBadge>  */}
 
-            <StatusBadge $isOverdue={task.isOverdue && !task.completed}>
+            <LeftSide>
+              {/* 6. Render the interactive stopwatch panel on the right side */}
+              <TimerControls>
+                <TimeDisplay $isActive={activeTaskId === task.id}>
 
-            </StatusBadge>
+                </TimeDisplay>
+              </TimerControls>
+              <Play onClick={incTimer()}/>
+              <Square />
+              <div> 10:00 </div>
+              <Play />
+              <Square />
+              <Trash2 />
+            </LeftSide>
           </TasksList>
         ))}
 
