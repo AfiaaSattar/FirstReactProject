@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, BubblesIcon } from 'lucide-react';
+import { ArrowLeft, BubblesIcon, RotateCcw } from 'lucide-react';
 import { Play, Pause} from 'lucide-react';
 import { Square } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
@@ -111,6 +111,11 @@ const AddTasks = styled.div`
     background-color: #5587c6;
     color: white;
     border-radius: 12px;
+
+    &:hover{
+    cursor: pointer;
+    background-color: #679ad8;
+    }
   }
 `
 
@@ -234,6 +239,20 @@ export default function DayPlannerPage() {
     ));
   };
 
+const addTask = () => {
+    if (taskInput.trim() === '') return;
+
+    const newTask = {
+      id: Date.now(),
+      text: taskInput,
+      completed: false,
+      timeSpent: 0 // Initialize at 0 seconds
+    };
+
+    setTasks([...tasks, newTask]);
+    setTaskInput('');
+  };
+
   return (
     <div style={{ padding: '40px', margin: '0 100px 0 200px' }}>
       {/* Header Nav */}
@@ -269,8 +288,12 @@ export default function DayPlannerPage() {
         </TasksHead>
 
         <AddTasks>
-          <input placeholder='Add a new task...' />
-          <button> + Add </button>
+          <input
+          value={taskInput}
+          onChange={(e) => setTaskInput(e.target.value)}
+          placeholder='Add a new task...' 
+          />
+          <button onClick={addTask}> + Add </button>
         </AddTasks>
 
         {/* Pinned to Left */}
