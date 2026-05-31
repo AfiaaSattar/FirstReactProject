@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { Play, Pause } from 'lucide-react';
 import { Square } from 'lucide-react';
-import { Trash2 } from 'lucide-react'; // 👈 Trash icon is imported here
+import { Trash2 } from 'lucide-react'; 
 import styled from 'styled-components';
 
 const NavBut = styled(Link)`
@@ -309,7 +309,7 @@ export default function DayPlannerPage() {
               <TimeDisplay $isActive={activeTaskId === task.id}>
                 {formatTime(task.timeSpent)}
               </TimeDisplay>
-              
+            
               {!task.completed && (
                 <>
                   <IconButton onClick={() => toggleTimer(task.id)}>
