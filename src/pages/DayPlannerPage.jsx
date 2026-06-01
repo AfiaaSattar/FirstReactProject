@@ -323,13 +323,6 @@ export default function DayPlannerPage() {
                   )}
                 </>
               )}
-                       {task.timeSpent > 0 && (
-                    <IconButton onClick={() => resetTimer(task.id)}>
-                      <RotateCcw size={14} />
-                    </IconButton>
-                  )}
-                </>
-              )}
 
               {/* 2. Added Delete Button on the far right of the item actions */}
               <DeleteButton onClick={() => deleteTask(task.id)} title="Delete Task">
