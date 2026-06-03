@@ -1,9 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
-import { Play, Pause } from 'lucide-react';
-import { Square } from 'lucide-react';
-import { Trash2 } from 'lucide-react'; 
+import { ArrowLeft, RotateCcw, Play, Pause, Trash2, Square } from 'lucide-react';
 import styled from 'styled-components';
 
 const NavBut = styled(Link)`
@@ -257,7 +254,7 @@ export default function DayPlannerPage() {
     <div style={{ padding: '40px', margin: '0 100px 0 200px' }}>
       {/* Header Nav */}
       <HeadNav>
-        <NavBut to="/"> ←  Back to Dashboard</NavBut>
+        <NavBut to="/"> ←  Back to Month</NavBut>
         <DateSelector>
           <span> {'<'} </span>
           <CenterDate>

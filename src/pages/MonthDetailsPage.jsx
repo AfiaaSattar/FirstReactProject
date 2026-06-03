@@ -1,6 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight} from 'lucide-react';
 import styled from 'styled-components';
 import { preinit } from 'react-dom';
 
