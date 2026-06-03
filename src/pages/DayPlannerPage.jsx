@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { data, Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ArrowLeft, RotateCcw, Play, Pause, Trash2, Square } from 'lucide-react';
 import styled from 'styled-components';
@@ -165,6 +165,31 @@ const DeleteButton = styled(IconButton)`
 `
 
 export default function DayPlannerPage() {
+  const {monthId, dayId} = useParams();
+
+  // This code to know in which day this tap
+  const jsMonthIndex = parseInt(monthId, 10) -1;
+  const jsDayNumber = parseInt(dayId, 10);
+  const CurrentYear = 2026;
+
+  const dateObject = new Date(CurrentYear, jsMonthIndex, jsDayNumber);
+  const CurrentDay = dateObject.toLocaleDateString('en-US', { weekday: 'long' });   const monthsMap = {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  };
+  const CurrentMonthName = monthsMap[monthId] || "Unknown Month";
+  const goToThetMonth = parseInt(monthId, 10);
+
   const [tasks, setTasks] = useState([
     { id: 1, text: "Review quarterly reports", completed: false, timeSpent: 0 },
     { id: 2, text: "Team standup meeting", completed: true, timeSpent: 340 },
@@ -249,16 +274,15 @@ export default function DayPlannerPage() {
   };
 
   const completedCount = tasks.filter(t => t.completed).length;
-
   return (
     <div style={{ padding: '40px', margin: '0 100px 0 200px' }}>
       {/* Header Nav */}
       <HeadNav>
-        <NavBut to="/"> ←  Back to Month</NavBut>
+        <NavBut to={`/month/${goToThetMonth}`}> ←  Back to {CurrentMonthName}</NavBut>
         <DateSelector>
           <span> {'<'} </span>
           <CenterDate>
-            <span>Friday, May 1 </span>
+            <span> {CurrentDay}, {CurrentMonthName} {dayId} </span>
             <Yearis>2026</Yearis>
           </CenterDate>
           <span> {'>'} </span>
