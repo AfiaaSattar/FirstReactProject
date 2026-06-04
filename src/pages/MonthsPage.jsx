@@ -1,13 +1,107 @@
-
 import { Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-//activ month and day
 const now = new Date();
 const currentMonthIndex = now.getMonth();
 const currentDay = now.getDate();
 const currentYear = now.getFullYear();
+
+const PageWrapper = styled.div`
+  background-color: #f8fafc; 
+  padding: 40px;
+  min-height: 100vh;
+`;
+
+const MainHeader = styled.h1`
+  color: #0f172a;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+`;
+
+const SubHeader = styled.p`
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 30px;
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+`;
+
+const StyledLink = styled(Link)`
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px; 
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); 
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px); 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #e2e8f0;
+  }
+`;
+
+const MonthHeader = styled.div`
+  background-color: ${props => props.$isCurrentMonth ? '#5c5be5' : '#ffffff'};
+  color: ${props => props.$isCurrentMonth ? '#ffffff' : '#0f172a'};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: ${props => props.$isCurrentMonth ? 'none' : '1px solid #f1f5f9'};
+`;
+
+const CalendarBody = styled.div`
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ffffff;
+`;
+
+const DaysOfWeekGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  color: #64748b; 
+  font-size: 0.85rem;
+  font-weight: 500;
+`;
+
+const DaysGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 8px 4px;
+`;
+
+const DateCell = styled.div`
+  font-size: 0.9rem;
+  font-weight: 400;
+  padding: 6px 0;
+  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? '#ffffff' : '#334155'};
+  background-color: ${props => props.isToday ? '#5c5be5' : 'transparent'};
+  border-radius: ${props => props.isToday ? '50%' : '8px'}; /* دائرة كاملة لليوم الحالي تبرز بوضوح */
+  cursor: ${props => props.isEmpty ? 'default' : 'pointer'};
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: ${props => props.isEmpty ? 'transparent' : props.isToday ? '#5c5be5' : '#f1f5f9'};
+  }
+`;
 
 export default function MonthsPage() {
   const months = [
@@ -17,41 +111,6 @@ export default function MonthsPage() {
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
-  const DateCell = styled.div`
-  color: ${props => props.isEmpty ? 'transparent' : props.isToday ? 'white' : '#444'};
-  background-color: ${props => props.isToday ? '#03a9f4' : 'transparent'};
-  border-radius: ${props => props.isToday ? '20%' : '0'};
-  &:hover{
-  background-color: ${props => props.isEmpty ? 'transparent' : '#ccc'};
-  border-radius: 8px;
-  }
-  `
-  const IconContainer = styled.div`
-    display: flex;
-    align-items: right;
-    justify-content: right;
-    padding: 15px;
-  `
-  const MonthContainer = styled.div`
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    padding: 15px;
-    `
-  const StyledLink = styled(Link)`
-  border: 1px solid #ccc;     /* Standard CSS: No quotes, use semicolon */
-  text-align: center;         /* Use kebab-case (text-align) not camelCase */
-  text-decoration: none;
-  color: black;
-  border-radius: 8px;
-  display: block;             /* Crucial for the border to show correctly */
-  transition: border-color 0.2s ease;
-  
-  &:hover {
-    border-color: #03a9f4;   
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-`;
   const getMonthData = (monthIndex) => {
     const year = 2026;
     const FirstDay = new Date(year, monthIndex, 1).getDay();
@@ -61,77 +120,50 @@ export default function MonthsPage() {
     const days = Array.from({ length: daysInMonth }, (_, i) => (i + 1));
 
     return [...blanks, ...days];
-  }
+  };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1 className='hed'>2026 Overview</h1>
-      <p className='hed2'>Select a month to view details</p>
+    <PageWrapper>
+      <MainHeader>2026 Overview</MainHeader>
+      <SubHeader>Select a month to view details</SubHeader>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '20px',
-        marginTop: '20px',
-        backgroundColor: 'white',
-      }}>
-        {months.map((month, index) => (
-          <StyledLink
-            key={month}
-            to={`/month/${index + 1}`}
-          >
-            <div>
-              <div style={{
-                backgroundColor: index === currentMonthIndex && currentYear === 2026 ? '#e1f5fe' : '#f0f0f0',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)'
-              }}>
-                <MonthContainer>
-                  {month}
-                </MonthContainer>
+      <GridContainer>
+        {months.map((month, index) => {
+          const isCurrentMonth = index === currentMonthIndex && currentYear === 2026;
 
-                <IconContainer>
-                  <Calendar />
-                </IconContainer>
-              </div>
+          return (
+            <StyledLink key={month} to={`/month/${index + 1}`}>
+            
+              <MonthHeader $isCurrentMonth={isCurrentMonth}>
+                <span>{month}</span>
+                <Calendar size={18} style={{ opacity: isCurrentMonth ? 1 : 0.4 }} />
+              </MonthHeader>
 
-              <div style={{
-                backgroundColor: 'white'
-              }}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(7, 1fr)',
-                  backgroundColor: 'white',
-                  padding: '20px'
-                }}>
+              <CalendarBody>
+               
+                <DaysOfWeekGrid>
                   {dayLabels.map((day, i) => (
-                    <p key={i}>{day}</p>
+                    <span key={i}>{day}</span>
                   ))}
-                </div>
-              </div>
+                </DaysOfWeekGrid>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(7, 1fr)',
-                backgroundColor: 'white',
-                gap: '7px',
-              }}>
-                {getMonthData(index).map((day, i) => {
-                  // This logic checks if the cell is TODAY
-                  const isToday = index === currentMonthIndex && day === currentDay && currentYear === 2026;
+                
+                <DaysGrid>
+                  {getMonthData(index).map((day, i) => {
+                    const isToday = index === currentMonthIndex && day === currentDay && currentYear === 2026;
 
-                  return (
-                    <DateCell key={i} isEmpty={!day} isToday={isToday}>
-                      {day}
-                    </DateCell>
-                  );
-                })}
-              </div>
-            </div>
-
-          </StyledLink>
-        ))}
-      </div>
-    </div>
+                    return (
+                      <DateCell key={i} isEmpty={!day} isToday={isToday}>
+                        {day}
+                      </DateCell>
+                    );
+                  })}
+                </DaysGrid>
+              </CalendarBody>
+            </StyledLink>
+          );
+        })}
+      </GridContainer>
+    </PageWrapper>
   );
 }
